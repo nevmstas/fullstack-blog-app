@@ -26,12 +26,19 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const appoloServer = new apollo_server_express_1.ApolloServer({
         schema: yield type_graphql_1.buildSchema({
             resolvers: [hello_1.HelloResolver],
-            validate: false
+            validate: false,
         }),
     });
     appoloServer.applyMiddleware({ app });
-    app.listen(PORT, () => {
+    const server = app.listen(PORT, () => {
         console.log(`server started on localhost:${PORT}`);
+    });
+    process.on("uncaughtException", () => {
+        console.info("uncaughtException signal received.");
+        console.log("Closing http server.");
+        server.close(() => {
+            console.log("Http server closed.");
+        });
     });
 });
 main().catch((err) => {

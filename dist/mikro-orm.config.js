@@ -13,8 +13,8 @@ exports.default = {
     },
     entities: [Post_1.Post],
     dbName: "lireddit",
+    password: "658578j",
     type: "postgresql",
     debug: !constants_1.__prod__,
-    password: '658578j'
 };
 //# sourceMappingURL=mikro-orm.config.js.map

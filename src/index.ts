@@ -18,14 +18,23 @@ const main = async () => {
   const appoloServer = new ApolloServer({
     schema: await buildSchema({
       resolvers: [HelloResolver],
-      validate: false
+      validate: false,
     }),
   });
 
   appoloServer.applyMiddleware({ app });
 
-  app.listen(PORT, () => {
+  const server = app.listen(PORT, () => {
     console.log(`server started on localhost:${PORT}`);
+  });
+
+  //Ubuntu
+  process.on("uncaughtException", () => {
+    console.info("uncaughtException signal received.");
+    console.log("Closing http server.");
+    server.close(() => {
+      console.log("Http server closed.");
+    });
   });
 };
 
