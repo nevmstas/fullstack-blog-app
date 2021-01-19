@@ -13,6 +13,7 @@ import redis from "redis";
 import session from "express-session";
 import connectRedis from "connect-redis";
 import { MyContext } from "./types";
+import cors from "cors";
 
 const PORT = 4000;
 
@@ -24,6 +25,13 @@ const main = async () => {
 
   const RedisStore = connectRedis(session);
   const redisClient = redis.createClient();
+
+  app.use(
+    cors({
+      origin: "http://localhost:3000",
+      credentials: true,
+    })
+  );
 
   app.use(
     session({
@@ -51,7 +59,10 @@ const main = async () => {
     context: ({ req, res }: MyContext) => ({ em: orm.em, req, res }),
   });
 
-  appoloServer.applyMiddleware({ app });
+  appoloServer.applyMiddleware({
+    app,
+    cors: false,
+  });
 
   const server = app.listen(PORT, () => {
     console.log(`server started on localhost:${PORT}`);
