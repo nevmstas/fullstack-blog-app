@@ -3,14 +3,14 @@ import { Form, Formik } from "formik";
 import { useRouter } from "next/dist/client/router";
 import { InputField } from "../components/InputField";
 import { Wrapper } from "../components/Wrapper";
-import { useRegisterMutation } from "../generated/graphql";
+import { useLoginMutation } from "../generated/graphql";
 import { toErrorMap } from "../utils/toErrorMap";
 
 interface RegisterProps {}
 
-const Register: React.FC<RegisterProps> = ({}) => {
+const Login: React.FC<RegisterProps> = ({}) => {
   const router = useRouter();
-  const [, register] = useRegisterMutation();
+  const [, login] = useLoginMutation();
   return (
     <Wrapper variant="small">
       <Formik
@@ -19,10 +19,10 @@ const Register: React.FC<RegisterProps> = ({}) => {
           password: "",
         }}
         onSubmit={async (values, { setSubmitting, setErrors }) => {
-          const response = await register(values);
-          if (response.data?.register.errors) {
-            setErrors(toErrorMap(response.data?.register.errors));
-          } else if (response.data?.register.user) {
+          const response = await login(values);
+          if (response.data?.login.errors) {
+            setErrors(toErrorMap(response.data?.login.errors));
+          } else if (response.data?.login.user) {
             router.push("/");
           }
           setSubmitting(false);
@@ -40,7 +40,7 @@ const Register: React.FC<RegisterProps> = ({}) => {
                 name="password"
                 placeholder="password"
                 label="Password"
-                type="password"
+                type='password'
               />
             </Box>
 
@@ -50,7 +50,7 @@ const Register: React.FC<RegisterProps> = ({}) => {
               colorScheme="pink"
               isLoading={isSubmitting}
             >
-              Register
+              Login
             </Button>
           </Form>
         )}
@@ -59,4 +59,4 @@ const Register: React.FC<RegisterProps> = ({}) => {
   );
 };
 
-export default Register;
+export default Login;

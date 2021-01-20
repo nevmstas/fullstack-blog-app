@@ -1,0 +1,5 @@
+export const MEDIUM_PINK = '#820263'
+export const LIGHT_PINK = '#d90368'
+export const GREY = '#eadeda'
+export const DARK_PINK = '#2e294e'
+export const YELLOW = '#ffd400'
