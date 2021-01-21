@@ -7,6 +7,7 @@ import {
   Text,
   Link,
   Avatar,
+  Button,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import React from "react";
@@ -36,6 +37,7 @@ export const Header = () => {
           {data.me.username}
         </Text>
         <Avatar mr={2} name={data.me.username} />
+        <Button variant='link'>Logout</Button>
       </>
     );
   }

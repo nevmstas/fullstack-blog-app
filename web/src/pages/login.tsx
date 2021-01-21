@@ -23,6 +23,7 @@ const Login: React.FC<RegisterProps> = ({}) => {
           if (response.data?.login.errors) {
             setErrors(toErrorMap(response.data?.login.errors));
           } else if (response.data?.login.user) {
+            console.log("normal");
             router.push("/");
           }
           setSubmitting(false);
@@ -40,7 +41,7 @@ const Login: React.FC<RegisterProps> = ({}) => {
                 name="password"
                 placeholder="password"
                 label="Password"
-                type='password'
+                type="password"
               />
             </Box>
 
