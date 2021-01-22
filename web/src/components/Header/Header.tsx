@@ -12,22 +12,29 @@ import {
 import NextLink from "next/link";
 import React from "react";
 import { DARK_PINK, GREY } from "../../styles/colors";
-import { useMeQuery } from "../../generated/graphql";
+import { useLogoutMutation, useMeQuery } from "../../generated/graphql";
 
 export const Header = () => {
   const [{ fetching, data }] = useMeQuery();
+  const [{ fetching: logoutFetching }, logout] = useLogoutMutation();
   let body = null;
+
+  const onLogout = () => {
+    logout();
+  };
 
   if (fetching) {
   } else if (!data?.me) {
     body = (
       <>
-        <Link ml="auto" mr={3} fontWeight="bold">
-          <NextLink href="/login">Login</NextLink>
-        </Link>
-        <Link fontWeight="bold">
-          <NextLink href="/login">Register</NextLink>
-        </Link>
+        <NextLink href="/login">
+          <Link ml="auto" mr={3} fontWeight="bold">
+            Login
+          </Link>
+        </NextLink>
+        <NextLink href="/register">
+          <Link fontWeight="bold">Register</Link>
+        </NextLink>
       </>
     );
   } else {
@@ -37,7 +44,9 @@ export const Header = () => {
           {data.me.username}
         </Text>
         <Avatar mr={2} name={data.me.username} />
-        <Button variant='link'>Logout</Button>
+        <Button disabled={logoutFetching} variant="link" onClick={onLogout}>
+          Logout
+        </Button>
       </>
     );
   }
