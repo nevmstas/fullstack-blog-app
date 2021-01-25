@@ -13,9 +13,12 @@ import NextLink from "next/link";
 import React from "react";
 import { DARK_PINK, GREY } from "../../styles/colors";
 import { useLogoutMutation, useMeQuery } from "../../generated/graphql";
+import { isServer } from "../../utils/isServer";
 
 export const Header = () => {
-  const [{ fetching, data }] = useMeQuery();
+  const [{ fetching, data }] = useMeQuery({
+    pause: isServer(),
+  });
   const [{ fetching: logoutFetching }, logout] = useLogoutMutation();
   let body = null;
 
@@ -68,3 +71,4 @@ export const Header = () => {
     </Box>
   );
 };
+
