@@ -14,7 +14,8 @@ import session from "express-session";
 import connectRedis from "connect-redis";
 import { MyContext } from "./types";
 import cors from "cors";
-import { sendEmail } from "./utils/sendEmail";
+//import { sendEmail } from "./utils/sendEmail";
+//import { User } from "./entities/User";
 
 const PORT = 4000;
 
