@@ -12,9 +12,11 @@ import {
 import { MyContext } from "../types";
 import argon2 from "argon2";
 import { EntityManager } from "@mikro-orm/postgresql";
-import { COOKIE_NAME } from "../constants";
+import { COOKIE_NAME, FORGET_PASSWORD_PREFIX } from "../constants";
 import { UsernamePasswordInput } from "./UsernamePasswordInput";
 import { validateRegister } from "../utils/validateRegister";
+import { sendEmail } from "../utils/sendEmail";
+import { v4 } from "uuid";
 
 @ObjectType()
 class FieldError {
@@ -34,14 +36,33 @@ class UserResponse {
 
 @Resolver()
 export class UserResolver {
-  // @Mutation()
-  // forgotPassword(
-  //   @Arg("email") email: string,
-  //   @Ctx() { em }: MyContext
-  // ): Boolean {
-  //   // const person = await em.findOne(User, { email });
-  //   return true;
-  // }
+  @Mutation(() => Boolean)
+  async forgotPassword(
+    @Arg("email") email: string,
+    @Ctx() { em, redis }: MyContext
+  ): Promise<Boolean> {
+    const user = await em.findOne(User, { email });
+
+    if (!user) {
+      return false;
+    }
+
+    const token = v4();
+
+    await redis.set(
+      FORGET_PASSWORD_PREFIX + token,
+      user.id,
+      "ex",
+      1000 * 60 * 60 * 24 * 3
+    );
+
+    sendEmail(
+      email,
+      `<a href="http://localhost:3000/change-password/${token}">Reset password</a>`
+    );
+
+    return true;
+  }
 
   @Query(() => [User])
   users(@Ctx() { em }: MyContext): Promise<User[]> {
