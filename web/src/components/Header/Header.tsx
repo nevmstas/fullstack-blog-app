@@ -55,7 +55,7 @@ export const Header = () => {
   }
 
   return (
-    <Box backgroundColor={GREY} color={DARK_PINK} p={3}>
+    <Box backgroundColor={GREY} color={DARK_PINK} p={3} top={0} position="sticky" zIndex={1}>
       <Flex alignItems="center">
         <Text fontWeight="bold" fontSize={30} mr={10}>
           Blogich
