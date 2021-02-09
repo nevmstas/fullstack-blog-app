@@ -7,9 +7,11 @@ import { useRouter } from "next/router";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { Layout } from "../components/Layout";
+import { useIsAuth } from "../hooks/useIsAuth";
 
 const CreatePost = () => {
   const router = useRouter();
+  useIsAuth();
   const [, createPost] = useCreatePostMutation();
   return (
     <Layout variant="small">
@@ -20,11 +22,7 @@ const CreatePost = () => {
         }}
         onSubmit={async (values) => {
           const { error } = await createPost(values);
-          if (error?.message.includes("not authenticated")) {
-            router.push("/login");
-          } else {
-            router.push("/");
-          }
+          if (!error) router.push("/");
         }}
       >
         {({ isSubmitting }) => (

@@ -26,8 +26,11 @@ const Login: React.FC<RegisterProps> = ({}) => {
           if (response.data?.login.errors) {
             setErrors(toErrorMap(response.data?.login.errors));
           } else if (response.data?.login.user) {
-            console.log("normal");
-            router.push("/");
+            if (typeof router.query.next === "string") {
+              router.push(router.query.next);
+            } else {
+              router.push("/");
+            }
           }
           setSubmitting(false);
         }}
@@ -49,9 +52,7 @@ const Login: React.FC<RegisterProps> = ({}) => {
             </Box>
             <Flex mt={2}>
               <NextLink href="/forgot-password">
-                <Link ml="auto">
-                  forgot password?
-                </Link>
+                <Link ml="auto">forgot password?</Link>
               </NextLink>
             </Flex>
             <Button
