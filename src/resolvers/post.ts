@@ -3,11 +3,13 @@ import {
   Arg,
   Ctx,
   Field,
+  FieldResolver,
   InputType,
   Int,
   Mutation,
   Query,
   Resolver,
+  Root,
   UseMiddleware,
 } from "type-graphql";
 import { MyContext } from "src/types";
@@ -21,8 +23,13 @@ class PostInput {
   @Field()
   text: string;
 }
-@Resolver()
+@Resolver(Post)
 export class PostResolver {
+  @FieldResolver(() => String)
+  textSnippet(@Root() root: Post) {
+    return root.text.slice(0, 70);
+  }
+
   @Query(() => [Post])
   async posts(
     @Arg("limit", () => Int) limit: number,
@@ -32,7 +39,7 @@ export class PostResolver {
 
     const qb = await getRepository(Post)
       .createQueryBuilder("p")
-      .orderBy('"createdAt"')
+      .orderBy('"createdAt"', "DESC")
       .take(realLimit);
     if (cursor) {
       qb.where('"createdAt" > :cursor', { cursor: new Date(parseInt(cursor)) });
