@@ -41,16 +41,17 @@ PostInput = __decorate([
 ], PostInput);
 let PostResolver = class PostResolver {
     posts(limit, cursor) {
-        const realLimit = Math.min(50, limit);
-        const qb = typeorm_1.getConnection()
-            .getRepository(Post_1.Post)
-            .createQueryBuilder("p")
-            .orderBy('"createdAt"')
-            .take(realLimit);
-        if (cursor) {
-            qb.where('"createdAt" > :cursor', { cursor: new Date(parseInt(cursor)) });
-        }
-        return qb.getMany();
+        return __awaiter(this, void 0, void 0, function* () {
+            const realLimit = Math.min(50, limit);
+            const qb = yield typeorm_1.getRepository(Post_1.Post)
+                .createQueryBuilder("p")
+                .orderBy('"createdAt"')
+                .take(realLimit);
+            if (cursor) {
+                qb.where('"createdAt" > :cursor', { cursor: new Date(parseInt(cursor)) });
+            }
+            return qb.getMany();
+        });
     }
     post(id) {
         return Post_1.Post.findOne(id);
