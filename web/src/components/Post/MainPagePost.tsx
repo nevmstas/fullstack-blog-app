@@ -18,7 +18,7 @@ interface FeatureType {
 export function MainPagePost({ post, ...rest }: FeatureType) {
   const { title, textSnippet } = post;
   return (
-    <Box p={5} shadow="md" borderWidth="1px" {...rest}>
+    <Box p={5} shadow="md" borderWidth="1px" borderRadius={16}{...rest}>
       <Heading fontSize="xl">{title}</Heading>
       <Text mt={4}>{textSnippet}...</Text>
     </Box>
