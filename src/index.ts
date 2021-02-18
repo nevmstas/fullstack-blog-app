@@ -78,13 +78,13 @@ const main = async () => {
   });
 
   //Ubuntu
-  process.on("uncaughtException", () => {
-    console.info("uncaughtException signal received.");
-    console.log("Closing http server.");
-    server.close(() => {
-      console.log("Http server closed.");
-    });
-  });
+  // process.on("uncaughtException", () => {
+  //   console.info("uncaughtException signal received.");
+  //   console.log("Closing http server.");
+  //   server.close(() => {
+  //     console.log("Http server closed.");
+  //   });
+  // });
 };
 
 main().catch((err) => {
