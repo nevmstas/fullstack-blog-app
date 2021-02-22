@@ -73,7 +73,7 @@ const main = async () => {
     cors: false,
   });
 
-  const server = app.listen(PORT, () => {
+  app.listen(PORT, () => {
     console.log(`server started on localhost:${PORT}`);
   });
 

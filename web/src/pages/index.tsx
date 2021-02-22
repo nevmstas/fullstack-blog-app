@@ -8,7 +8,6 @@ import { AddIcon } from "@chakra-ui/icons";
 
 import { MainPagePost } from "../components/Post/MainPagePost";
 import { useState } from "react";
-import { limits } from "argon2";
 
 const Index = () => {
   const [variables, setVariables] = useState({
@@ -18,6 +17,7 @@ const Index = () => {
   const [{ fetching, data }] = usePostsQuery({
     variables,
   });
+  console.log("data", data?.posts);
   return (
     <Layout>
       <NextLink href="/create-post">
@@ -29,7 +29,9 @@ const Index = () => {
         {!data && fetching ? (
           <Progress size="xs" isIndeterminate />
         ) : (
-          data?.posts.map((post) => <MainPagePost key={post.id} post={post} />)
+          data?.posts.posts.map((post, index) => (
+            <MainPagePost key={index} post={post} />
+          ))
         )}
       </Stack>
       {data ? (
@@ -38,7 +40,7 @@ const Index = () => {
             onClick={() =>
               setVariables({
                 limit: variables.limit,
-                cursor: data.posts[data.posts.length - 1].createdAt,
+                cursor: data.posts.posts[data.posts.posts.length - 1].createdAt,
               })
             }
             mt={8}

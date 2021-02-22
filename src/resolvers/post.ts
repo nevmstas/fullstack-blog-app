@@ -39,7 +39,7 @@ export class PostResolver {
     return root.text.slice(0, 70);
   }
 
-  @Query(() => [PaginatedPosts])
+  @Query(() => PaginatedPosts)
   async posts(
     @Arg("limit", () => Int) limit: number,
     @Arg("cursor", () => String, { nullable: true }) cursor: string | null
