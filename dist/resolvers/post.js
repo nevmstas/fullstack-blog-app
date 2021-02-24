@@ -26,7 +26,6 @@ const Post_1 = require("../entities/Post");
 const type_graphql_1 = require("type-graphql");
 const isAuth_1 = require("../middleware/isAuth");
 const typeorm_1 = require("typeorm");
-const Updoots_1 = require("src/entities/Updoots");
 let PostInput = class PostInput {
 };
 __decorate([
@@ -123,16 +122,18 @@ let PostResolver = class PostResolver {
             const { userId } = req.session;
             const isUpdoot = value !== -1;
             const realValue = isUpdoot ? 1 : -1;
-            yield Updoots_1.Updoot.insert({
-                userId,
-                postId,
-                value: realValue,
-            });
             yield typeorm_1.getConnection().query(`
-      update post p
-      set p.points = p.points + $1
-      where p.id = $2
-    `, [realValue, postId]);
+      START TRANSACTION;
+      
+      insert into updoot ("userId", "postId", value)
+      values (${userId}, ${postId}, ${realValue});
+      
+      update post
+      set points = points + ${realValue}
+      where id = ${postId};
+
+      COMMIT;
+    `);
             return true;
         });
     }

@@ -5,11 +5,11 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
-  // OneToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-// import { Updoot } from "./Updoots";
+import { Updoot } from "./Updoot";
 import { User } from "./User";
 
 @ObjectType()
@@ -39,8 +39,8 @@ export class Post extends BaseEntity {
   @ManyToOne(() => User, (user) => user.posts)
   creator: User;
 
-  // @OneToMany(() => Updoot, updoot => updoot.user)
-  // updoots: Updoot[]
+  @OneToMany(() => Updoot, updoot => updoot.post)
+  updoots: Updoot[]
 
   @Field(() => String)
   @CreateDateColumn()

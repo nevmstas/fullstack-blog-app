@@ -46,4 +46,4 @@ Updoot = __decorate([
     typeorm_1.Entity()
 ], Updoot);
 exports.Updoot = Updoot;
-//# sourceMappingURL=Updoots.js.map
+//# sourceMappingURL=Updoot.js.map
