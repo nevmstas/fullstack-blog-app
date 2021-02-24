@@ -26,6 +26,7 @@ const Post_1 = require("../entities/Post");
 const type_graphql_1 = require("type-graphql");
 const isAuth_1 = require("../middleware/isAuth");
 const typeorm_1 = require("typeorm");
+const Updoots_1 = require("src/entities/Updoots");
 let PostInput = class PostInput {
 };
 __decorate([
@@ -117,6 +118,24 @@ let PostResolver = class PostResolver {
             return true;
         });
     }
+    vote(postId, value, { req }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { userId } = req.session;
+            const isUpdoot = value !== -1;
+            const realValue = isUpdoot ? 1 : -1;
+            yield Updoots_1.Updoot.insert({
+                userId,
+                postId,
+                value: realValue,
+            });
+            yield typeorm_1.getConnection().query(`
+      update post p
+      set p.points = p.points + $1
+      where p.id = $2
+    `, [realValue, postId]);
+            return true;
+        });
+    }
 };
 __decorate([
     type_graphql_1.FieldResolver(() => String),
@@ -164,6 +183,15 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], PostResolver.prototype, "deletePost", null);
+__decorate([
+    type_graphql_1.Mutation(() => Boolean),
+    __param(0, type_graphql_1.Arg("postId", () => type_graphql_1.Int)),
+    __param(1, type_graphql_1.Arg("value", () => type_graphql_1.Int)),
+    __param(2, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Number, Object]),
+    __metadata("design:returntype", Promise)
+], PostResolver.prototype, "vote", null);
 PostResolver = __decorate([
     type_graphql_1.Resolver(Post_1.Post)
 ], PostResolver);
