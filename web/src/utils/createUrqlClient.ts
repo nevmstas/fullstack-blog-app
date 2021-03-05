@@ -30,10 +30,10 @@ const errorExchange: Exchange = ({ forward }) => (ops$) => {
 //research!!!
 //research!!!
 
-//refactor: 
+//refactor:
 // - delete deprecated method resolveFieldByKey
 
-//Copied logic :D 
+//Copied logic :D
 export const cursorPagination = (): Resolver => {
   return (_parent, fieldArgs, cache, info) => {
     const { parentKey: entityKey, fieldName } = info;
@@ -45,13 +45,16 @@ export const cursorPagination = (): Resolver => {
       return undefined;
     }
     const fieldKey = `${fieldName}(${stringifyVariables(fieldArgs)})`;
-    const isItInTheCache = cache.resolve(cache.resolveFieldByKey(entityKey, fieldKey) as string, "posts");
+    const isItInTheCache = cache.resolve(
+      cache.resolveFieldByKey(entityKey, fieldKey) as string,
+      "posts"
+    );
     info.partial = !isItInTheCache;
     let hasMore = true;
     const results: string[] = [];
 
     fieldInfos.forEach((fi) => {
-      const key = cache.resolveFieldByKey(entityKey, fi.fieldKey) as string
+      const key = cache.resolveFieldByKey(entityKey, fi.fieldKey) as string;
       const data = cache.resolve(key, "posts") as string[];
       const _hasMore = cache.resolve(key, "hasMore");
       if (!_hasMore) {
@@ -138,6 +141,16 @@ export const createUrqlClient = (ssrExchange: any) => ({
       },
       updates: {
         Mutation: {
+          createPost: (_result, args, cache, info) => {
+            const allFields = cache.inspectFields("Query");
+            const fieldInfos = allFields.filter(
+              (info) => info.fieldName === "post"
+            );
+              console.log(123)
+            fieldInfos.forEach((fi) => {
+              cache.invalidate("Query", "post", fi.arguments || {});
+            });
+          },
           login: (_result, args, cache, info) => {
             betterUpdateQuery<LoginMutation, MeQuery>(
               cache,

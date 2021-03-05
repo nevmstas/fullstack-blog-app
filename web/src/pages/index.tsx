@@ -21,7 +21,7 @@ const Index = () => {
   return (
     <Layout>
       <NextLink href="/create-post">
-        <Button rightIcon={<AddIcon />} colorScheme="pink">
+        <Button rightIcon={<AddIcon />} colorScheme="pink" borderRadius={14}>
           Create post
         </Button>
       </NextLink>
