@@ -1,5 +1,8 @@
-import { Box, Heading, Stack, Text } from "@chakra-ui/react";
+import { Box, Heading, IconButton, Stack, Text } from "@chakra-ui/react";
 import React from "react";
+
+import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
+import { UpdootSection } from "./UpdootSection";
 
 export interface PostCreator {
   id: number;
@@ -18,6 +21,7 @@ export interface PostType {
   creator: PostCreator;
   createdAt: string;
   updatedAt: string;
+  points: string;
 }
 
 interface FeatureType {
@@ -25,14 +29,26 @@ interface FeatureType {
 }
 
 export function MainPagePost({ post, ...rest }: FeatureType) {
-  const { title, textSnippet, creator } = post;
+  const { title, textSnippet, creator, points } = post;
   return (
-    <Box p={5} shadow="md" borderWidth="1px" borderRadius={16} {...rest}>
-      <Heading fontSize="xl">{title}</Heading>
-      <Text mt={4}>{textSnippet}...</Text>
-      <Text mt={4}>
-        Written by <b>{creator.username}</b>
-      </Text>
+    <Box
+      p={5}
+      shadow="md"
+      borderWidth="1px"
+      borderRadius={16}
+      display="flex"
+      justifyContent="space-between"
+      alignItems="center"
+      {...rest}
+    >
+      <Box>
+        <Heading fontSize="xl">{title}</Heading>
+        <Text mt={4}>{textSnippet}...</Text>
+        <Text mt={4}>
+          Written by <b>{creator.username}</b>
+        </Text>
+      </Box>
+      <UpdootSection points={points} />
     </Box>
   );
 }
