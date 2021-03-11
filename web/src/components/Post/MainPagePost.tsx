@@ -1,9 +1,7 @@
-import { Box, Heading, IconButton, Stack, Text } from "@chakra-ui/react";
+import { Box, Heading, Text } from "@chakra-ui/react";
 import React from "react";
-
-import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import { UpdootSection } from "./UpdootSection";
-import { PostSnippetFragment, PostsQuery } from "../../generated/graphql";
+import { PostSnippetFragment } from "../../generated/graphql";
 
 export interface PostCreator {
   id: number;
