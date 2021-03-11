@@ -3,6 +3,7 @@ import React from "react";
 
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import { UpdootSection } from "./UpdootSection";
+import { PostSnippetFragment, PostsQuery } from "../../generated/graphql";
 
 export interface PostCreator {
   id: number;
@@ -25,11 +26,11 @@ export interface PostType {
 }
 
 interface FeatureType {
-  post: PostType;
+  post: PostSnippetFragment;
 }
 
 export function MainPagePost({ post, ...rest }: FeatureType) {
-  const { title, textSnippet, creator, points } = post;
+  const { title, textSnippet, creator } = post;
   return (
     <Box
       p={5}
@@ -48,7 +49,7 @@ export function MainPagePost({ post, ...rest }: FeatureType) {
           Written by <b>{creator.username}</b>
         </Text>
       </Box>
-      <UpdootSection points={points} />
+      <UpdootSection post={post} />
     </Box>
   );
 }
