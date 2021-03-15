@@ -61,7 +61,10 @@ let PostResolver = class PostResolver {
         return __awaiter(this, void 0, void 0, function* () {
             const realLimit = Math.min(50, limit);
             const realLimitPlusOne = Math.min(50, limit) + 1;
-            const replacements = [realLimitPlusOne, req.session.userId];
+            const replacements = [realLimitPlusOne];
+            if (req.session.userId) {
+                replacements.push(req.session.userId);
+            }
             if (cursor) {
                 replacements.push(new Date(parseInt(cursor)));
             }
@@ -76,7 +79,7 @@ let PostResolver = class PostResolver {
           'updatedAt', u."updatedAt"
           ) creator,
         ${req.session.userId
-                ? '(select value from updoot where "userId" = $3 and "postId" = p.id) "voteStatus"'
+                ? '(select value from updoot where "userId" = $2 and "postId" = p.id) "voteStatus"'
                 : 'null as "voteStatus"'}
         from post p
         inner join public.user u on u.id = p."creatorId"
@@ -126,6 +129,7 @@ let PostResolver = class PostResolver {
             const { userId } = req.session;
             const isUpdoot = value !== -1;
             const realValue = isUpdoot ? 1 : -1;
+            console.log(req.session.userId);
             const updoot = yield Updoot_1.Updoot.findOne({ where: { postId, userId } });
             if (updoot && updoot.value !== realValue) {
                 yield typeorm_1.getConnection().transaction((tm) => __awaiter(this, void 0, void 0, function* () {

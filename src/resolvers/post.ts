@@ -49,7 +49,11 @@ export class PostResolver {
     const realLimit = Math.min(50, limit);
     const realLimitPlusOne = Math.min(50, limit) + 1;
 
-    const replacements: any[] = [realLimitPlusOne, req.session.userId];
+    const replacements: any[] = [realLimitPlusOne];
+
+    if (req.session.userId) {
+      replacements.push(req.session.userId);
+    }
 
     if (cursor) {
       replacements.push(new Date(parseInt(cursor)));
@@ -68,7 +72,7 @@ export class PostResolver {
           ) creator,
         ${
           req.session.userId
-            ? '(select value from updoot where "userId" = $3 and "postId" = p.id) "voteStatus"'
+            ? '(select value from updoot where "userId" = $2 and "postId" = p.id) "voteStatus"'
             : 'null as "voteStatus"'
         }
         from post p
@@ -79,17 +83,6 @@ export class PostResolver {
       `,
       replacements
     );
-    // const qb = await getRepository(Post)
-    //   .createQueryBuilder("p")
-    //   .innerJoinAndSelect("p.creator", "u", 'u.id = p."creatorId"')
-    //   .orderBy('p."createdAt"', "DESC")
-    //   .take(realLimitPlusOne);
-    // if (cursor) {
-    //   qb.where('p."createdAt" > :cursor', {
-    //     cursor: new Date(parseInt(cursor)),
-    //   });
-    // }
-    // const posts = await qb.getMany();
     return {
       posts: posts.slice(0, realLimit),
       hasMore: posts.length === realLimitPlusOne,
@@ -144,7 +137,7 @@ export class PostResolver {
     const { userId } = req.session;
     const isUpdoot = value !== -1;
     const realValue = isUpdoot ? 1 : -1;
-
+    console.log(req.session.userId);
     const updoot = await Updoot.findOne({ where: { postId, userId } });
 
     //the user has voted on the post before
