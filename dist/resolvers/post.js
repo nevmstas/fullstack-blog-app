@@ -57,7 +57,7 @@ let PostResolver = class PostResolver {
     textSnippet(root) {
         return root.text.slice(0, 70);
     }
-    posts(limit, cursor, { req }) {
+    posts(limit, cursor, letters, { req }) {
         return __awaiter(this, void 0, void 0, function* () {
             const realLimit = Math.min(50, limit);
             const realLimitPlusOne = Math.min(50, limit) + 1;
@@ -84,6 +84,7 @@ let PostResolver = class PostResolver {
         from post p
         inner join public.user u on u.id = p."creatorId"
         ${cursor ? 'where p."createdAt" > $3' : ""}
+        ${letters ? `WHERE p.title LIKE '${letters}%'` : ''}
         order by p."createdAt" DESC
         limit $1
       `, replacements);
@@ -173,9 +174,10 @@ __decorate([
     type_graphql_1.Query(() => PaginatedPosts),
     __param(0, type_graphql_1.Arg("limit", () => type_graphql_1.Int)),
     __param(1, type_graphql_1.Arg("cursor", () => String, { nullable: true })),
-    __param(2, type_graphql_1.Ctx()),
+    __param(2, type_graphql_1.Arg("letters", () => String, { nullable: true })),
+    __param(3, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Object, Object]),
+    __metadata("design:paramtypes", [Number, Object, String, Object]),
     __metadata("design:returntype", Promise)
 ], PostResolver.prototype, "posts", null);
 __decorate([

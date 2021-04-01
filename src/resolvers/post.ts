@@ -44,6 +44,7 @@ export class PostResolver {
   async posts(
     @Arg("limit", () => Int) limit: number,
     @Arg("cursor", () => String, { nullable: true }) cursor: string | null,
+    @Arg("letters", () => String, { nullable: true }) letters: string,
     @Ctx() { req }: MyContext
   ): Promise<PaginatedPosts> {
     const realLimit = Math.min(50, limit);
@@ -78,6 +79,7 @@ export class PostResolver {
         from post p
         inner join public.user u on u.id = p."creatorId"
         ${cursor ? 'where p."createdAt" > $3' : ""}
+        ${letters?`WHERE p.title LIKE '${letters}%'`: ''}
         order by p."createdAt" DESC
         limit $1
       `,

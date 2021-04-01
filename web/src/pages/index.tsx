@@ -3,21 +3,36 @@ import { withUrqlClient } from "next-urql";
 import { usePostsQuery } from "../generated/graphql";
 import { Layout } from "../components/Layout";
 import NextLink from "next/link";
-import { Stack, Progress, Button, Flex } from "@chakra-ui/react";
-import { AddIcon } from "@chakra-ui/icons";
+import {
+  Stack,
+  Progress,
+  Button,
+  Flex,
+  InputGroup,
+  Input,
+  InputLeftElement,
+} from "@chakra-ui/react";
+import { AddIcon, Search2Icon } from "@chakra-ui/icons";
 
 import { MainPagePost } from "../components/Post/MainPagePost";
-import { useState } from "react";
+import React, { useState } from "react";
 
 const Index = () => {
   const [variables, setVariables] = useState({
     limit: 10,
     cursor: null as string | null,
+    letters: null as string | null,
   });
+  console.log(variables)
   const [{ fetching, data }] = usePostsQuery({
     variables,
   });
   console.log("data", data?.posts);
+
+  const onChangeSearch = (event: any) => {
+    console.log(event.target.value)
+    setVariables({ ...variables, letters: event.target.value });
+  };
   return (
     <Layout>
       <NextLink href="/create-post">
@@ -25,6 +40,19 @@ const Index = () => {
           Create post
         </Button>
       </NextLink>
+      <Flex>
+        <InputGroup>
+          <InputLeftElement
+            pointerEvents="none"
+            children={<Search2Icon color="gray.300" />}
+          />
+          <Input
+            type="tel"
+            placeholder="Phone number"
+            onChange={onChangeSearch}
+          />
+        </InputGroup>
+      </Flex>
       <Stack spacing={8} mt={8}>
         {!data && fetching ? (
           <Progress size="xs" isIndeterminate />
@@ -41,6 +69,7 @@ const Index = () => {
               setVariables({
                 limit: variables.limit,
                 cursor: data.posts.posts[data.posts.posts.length - 1].createdAt,
+                letters: variables.letters,
               })
             }
             mt={8}

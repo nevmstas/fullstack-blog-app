@@ -25,6 +25,7 @@ export type Query = {
 
 
 export type QueryPostsArgs = {
+  letters?: Maybe<Scalars['String']>;
   cursor?: Maybe<Scalars['String']>;
   limit: Scalars['Int'];
 };
@@ -283,6 +284,7 @@ export type MeQuery = (
 export type PostsQueryVariables = Exact<{
   limit: Scalars['Int'];
   cursor?: Maybe<Scalars['String']>;
+  letters?: Maybe<Scalars['String']>;
 }>;
 
 
@@ -436,8 +438,8 @@ export function useMeQuery(options: Omit<Urql.UseQueryArgs<MeQueryVariables>, 'q
   return Urql.useQuery<MeQuery>({ query: MeDocument, ...options });
 };
 export const PostsDocument = gql`
-    query Posts($limit: Int!, $cursor: String) {
-  posts(limit: $limit, cursor: $cursor) {
+    query Posts($limit: Int!, $cursor: String, $letters: String) {
+  posts(limit: $limit, cursor: $cursor, letters: $letters) {
     hasMore
     posts {
       ...PostSnippet
