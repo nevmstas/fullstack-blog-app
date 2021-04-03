@@ -23,16 +23,24 @@ const Index = () => {
     cursor: null as string | null,
     letters: null as string | null,
   });
-  console.log(variables)
-  const [{ fetching, data }] = usePostsQuery({
+
+  const [timer, setTimer] = useState<any>(null);
+
+  const [{ fetching, data }, posts] = usePostsQuery({
     variables,
   });
-  console.log("data", data?.posts);
 
   const onChangeSearch = (event: any) => {
-    console.log(event.target.value)
-    setVariables({ ...variables, letters: event.target.value });
+    if (timer) {
+      clearTimeout(timer);
+    }
+    setTimer(
+      setTimeout(() => {
+        setVariables({ ...variables, letters: event.target.value });
+      }, 500)
+    );
   };
+
   return (
     <Layout>
       <NextLink href="/create-post">
